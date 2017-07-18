@@ -93,7 +93,7 @@ void moverDeNuevosListos(queue<string> & nuevos, priority_queue<Proceso> & listo
 	for (int i = 0; i < count; ++i)
 	{
 		temp = split(nuevos.front(), '/');
-		if (validarProceso);
+		if (validarProceso)
 		{
 			for (int i = 0; i < 6; ++i)
 			{
@@ -102,6 +102,10 @@ void moverDeNuevosListos(queue<string> & nuevos, priority_queue<Proceso> & listo
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
+		} else {
+			nuevos.push(nuevos.front()); /* esto permitira que aquellos elementos que no cuplan con los requisitos
+			vuelvan a la cola con el objetivo de que al final los presentemos en pantalla como elementos
+			que no pasaron la prueba */ 
 		}
 		nuevos.pop();
 	}
