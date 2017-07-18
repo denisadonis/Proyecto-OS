@@ -3,6 +3,7 @@
 
 #include <string>
 using std::string;
+#include <iostream>
 
 class Proceso
 {

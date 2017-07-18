@@ -33,13 +33,22 @@ void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); //
 
 int main()
 {
-	int parada;
+	/*int parada;
 	int ciclosProcesador;
 	cout << "Indique el Numero de Ciclos para el programa: " << endl;
-	cin >> ciclosProcesador;
+	cin >> ciclosProcesador; */
 
 	queue<string> nuevos = split(abrirArchivo(), ';');
 	priority_queue<Proceso> listos;
+
+	int count = nuevos.size();
+
+	for (int i = 0; i < count; ++i)
+	{
+		cout << nuevos.front() << endl;
+		nuevos.push(nuevos.front());
+		nuevos.pop();
+	}
 
 	moverDeNuevosListos(nuevos, listos);
 	
@@ -63,7 +72,7 @@ int main()
 		listos.pop();
 	}
 
-	cin >> parada; // Para que el .exe no se pare de un solo.
+	//cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;
 }
@@ -131,11 +140,10 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 			for (int i = 0; i < 6; i++)
 			{
 				// atoi convierte cadenas a enteros, luego del primer digito, cualquier simbolo/letra sera ignorado
-				code[i] = atoi(temp.front().c_str()); // .c_str() solo de esta forma se puede usar atoi en string
+				code[i] = stoi(temp.front()); // .c_str() solo de esta forma se puede usar atoi en string
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
-
 		} else {
 			nuevos.push(nuevos.front());
 		}
@@ -147,6 +155,7 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 bool validarProceso(queue<string> cola) {
 
 	string temporal[6];
+	static queue<string> hist_ids; // variable etatica donde se guardara el historial de ids
 	// Espacios que tienen cada unas de las partes de un Proceso.
 	int paso[6];
 	paso[0] = 4; // Id del Proceso
@@ -187,13 +196,31 @@ bool validarProceso(queue<string> cola) {
 				return false;
 			}
 		}
-
-		temporal[i] = cola.front();
 		//cout << i << ". Temporal: " << temporal[i] << endl;
+		temporal[i] = cola.front();
+
 
 		// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
 		cola.push(cola.front());
 		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
+	}
+
+	if (!hist_ids.empty())
+	{
+		int count = hist_ids.size();
+
+		for (int i = 0; i < count; ++i)
+		{
+			if (temporal[0] != hist_ids.front()) {
+				hist_ids.push(temporal[0]);
+			} else {
+				return false;
+			}
+			hist_ids.push(hist_ids.front());
+			hist_ids.pop();
+		}
+	} else {
+		hist_ids.push(temporal[0]);
 	}
 
 	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
