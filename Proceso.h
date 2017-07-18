@@ -50,7 +50,7 @@ Proceso::Proceso(int id, int state, int priority, int n_ins, int lock_i, int loc
 }
 
 bool Proceso::operator < (const Proceso &element) const {
-	return this->priority < element.priority;
+	return this->priority > element.priority;
 }
 
 // Metodos Set
