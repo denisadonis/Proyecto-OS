@@ -33,6 +33,11 @@ void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); //
 
 int main()
 {
+	int parada;
+	int ciclosProcesador;
+	cout << "Indique el Numero de Ciclos para el programa: " << endl;
+	cin >> ciclosProcesador;
+
 	queue<string> nuevos = split(abrirArchivo(), ';');
 	priority_queue<Proceso> listos;
 
@@ -57,6 +62,8 @@ int main()
 
 		listos.pop();
 	}
+
+	cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;
 }
@@ -165,7 +172,7 @@ bool validarProceso(queue<string> cola) {
 		} else {
 
 			//cout << cola.front().size();
-			cout << " El Espacio de una parte del Proceso es Incorrecto." << endl;
+			cout << "El Espacio de una parte del Proceso es Incorrecto." << endl;
 			return false;
 		}
 	}
@@ -191,17 +198,21 @@ bool validarProceso(queue<string> cola) {
 
 	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
 	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico
-		cout << "La prioridad de un proceso debe estar entre 1 y 3" << endl;
+		cout << "La prioridad de un proceso debe estar entre 1 y 3." << endl;
 		return false;
 	}
 
 	// Se encarga de validar que la Cantidad de Instrucciones deba de ser MAYOR a las de bloqueo.
 	if(temporal[4] > temporal[3]){
-		cout << "Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones" << endl;
+		cout << "Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones." << endl;
 		return false;
 	}
 
-	//Falta la validacion de Ids repetidos
+	// Se encarga de validar si lleva un evento conocido
+	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){
+		cout << "No es Evento conocido." << endl;
+		return false;
+	}
 
 	// Si no se encontro ningun error, la funcion retorna true.
 	return true;
