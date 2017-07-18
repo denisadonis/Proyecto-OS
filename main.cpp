@@ -10,40 +10,50 @@
 
 using namespace std;
 
-/* queue cola sin prioridad metodos basicos 
- * .front() devuelve el valor del primer elemento
- * .pop() saca el primer elemento de la cola no devuelve nada
+/* • queue<>, Cola (First in, First out) sin prioridad metodos basicos 
+ * .front() retorna el valor del primer elemento
+ * .pop() saca el primer elemento de la cola, no devuelve nada
  * .push() inserta elementos en la cola
- * .size() devuelve el tamaño de la cola
+ * .size() retorna el tamaño de la cola
+ * .back() accede al ultimo elemento en la cola
+ * .empty() revisa si la cola esta vacia
  *
- * priority_queue cola con prioridad:
- * de los metodos de queue front() es el unico metodo que nos es valido
- * se sustituye por top().
- * .emplace() esta funcion intancia un elemento y lo inseta en la cola sin la 
+ * • priority_queue<> cola con prioridad:
+ * de los metodos de queue<>, .front() es el unico metodo que nos es valido
+ * y se sustituye por .top() que accede al elemento encima de la cola
+ * .emplace() esta funcion instancia un elemento y lo inseta en la cola sin la 
  * necesidad de crear un objeto temporal
  */
 
-string abrirArchivo(void); // abre un archivo y devuelve un string con todos los elementos concatenados
-queue<string> split(string, const char); // Funcion para separar cadenas devuelve una cola sin prioridad
-void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &);
+// Prototipos
+string abrirArchivo(void); // Abre un archivo y devuelve un string con todos los elementos concatenados
+queue<string> split(string, const char); // Funcion para separar cadenas, devuelve una cola sin prioridad
+void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); //
 
 int main()
 {
-	queue<string> nuevos = split(abrirArchivo(), ';'); 
+	queue<string> nuevos = split(abrirArchivo(), ';');
 	priority_queue<Proceso> listos;
 
 	moverDeNuevosListos(nuevos, listos);
 	
-	cout << listos.size() << endl;
+	//cout << "tamaño: " << listos.size() << endl;
 
-	while (!listos.empty()) {
-		cout << ((Proceso)listos.top()).get_priority() << endl; //Cuidado con la forma de sacar objetos de la cola
+	cout << "--------------------" << endl;
+
+	while (!listos.empty()) { // Funciona mientras listos no este vacio
+		cout << "ID del proceso: " << ((Proceso)listos.top()).get_id() << endl;
+		cout << "Prioridad: " << ((Proceso)listos.top()).get_priority() << endl; //Cuidado con la forma de sacar objetos de la cola
+
+		//cout << "primeros en la lista: " << listos.top() << endl;
+
 		listos.pop();
 	}
 
 	return 0;
 }
 
+// Funcion encargada de abrir un archivo y guardar las lineas en una variable
 string abrirArchivo(void)
 {
 	string line;
@@ -56,64 +66,76 @@ string abrirArchivo(void)
 		while (getline(infile, line))
 		{
 			data += line + "\n";
+			//cout << data << endl;
 		}
 	} catch (exception & e) {
-		cout << "error al intentar abrir el archivo" << endl;
+		cout << "Error al intentar abrir el archivo" << endl;
 	}
 
 	infile.close();
-
-	return data;
+	//cout << "Data: " << data << endl;
+	return data; // Todo la informacion del archivo se mantiene aqui
 }
 
-queue<string> split(string str, const char delimiter)
-{
+// Funcion encargada de dividir las cadenas (string data, char delimitador(;))
+queue<string> split(string str, const char delimiter){
+	//cout << "prueba" << endl;
 	istringstream isstream(str);
-    queue<string> cola;
-    string word;
+  queue<string> cola;
+  string word = "";
 
-    while(std::getline(isstream, word, delimiter)) {
-    	if (word != "\n")
-    	{
+  while(std::getline(isstream, word, delimiter)) { // (data, palabravacia, "/")
+  	if (word != "\n"){
 			cola.push(word);	        
-    	}
-    }
+  	}
+  }
 
+  cout << "Valor Enfrente: " << cola.front() << endl;
 	return cola;
 }
-/* resive la referencia de una cola de string y devuelve una cola de prioridad con 
+
+/* recibe la referencia de una cola de string y devuelve una cola de prioridad con 
 todos los procesos que cumplen los requisitos para poder ejecutarse*/
-void moverDeNuevosListos(queue<string> & nuevos, priority_queue<Proceso> & listos)
+void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos) //&nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio
 {
-	bool validarProceso(queue<string> cola);
+	
+	bool validarProceso(queue<string> cola); // Prototipo
+	
 	queue<string> temp; // cola donde se almacenaran las cadenas resultantes depues de dividir los proceso
 	int count = nuevos.size(); // tamaño de la cola para poder ser usada en el ciclo 
 	int code[6]; // donde se guardaran temporalmento los datos de un proceso para despues poder ser insertados en la cola
 
-	for (int i = 0; i < count; ++i)
+	for (int i = 0; i < count; i++)
 	{
-		temp = split(nuevos.front(), '/');
-		if (validarProceso)
+		temp = split(nuevos.front(), '/'); // contiene las "6" partes de un proceso
+		
+		if (validarProceso(temp)) // validacion de los procesos.
 		{
-			for (int i = 0; i < 6; ++i)
+			cout << "Luego de validar los procesos" << endl;
+			for (int i = 0; i < 6; i++)
 			{
 				// atoi convierte cadenas a enteros
 				code[i] = atoi(temp.front().c_str()); // .c_str() solo de esta forma se puede usar atoi en string
+				cout << "parteProceso: " << i << ". "<< code[i] << endl;
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
-		} else {
-			nuevos.push(nuevos.front()); /* esto permitira que aquellos elementos que no cuplan con los requisitos
-			vuelvan a la cola con el objetivo de que al final los presentemos en pantalla como elementos
-			que no pasaron la prueba */ 
+
 		}
 		nuevos.pop();
+		//cout << "tamaño en Funcion: " << listos.size() << endl;
 	}
 }
 
-// esta funcion en con el objetivo de intentar validar los proceso, seria mejor tratar de validarlos antes de
+// esta funcion es con el objetivo de intentar validar los proceso, seria mejor tratar de validarlos antes de
 // convertirlos a enteros ya que si hay leras o espacios podrian ocacionar error
 bool validarProceso(queue<string> cola) 
 {
-	return cola.size() == 6;
+	if(cola.size() != 6){
+		cout << "El proceso esta incompleto" << endl;
+		return false;
+	}
+
+
+	return true;
 }

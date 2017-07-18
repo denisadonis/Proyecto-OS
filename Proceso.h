@@ -6,32 +6,40 @@ using std::string;
 
 class Proceso
 {
-public:
-	Proceso(int,int,int,int,int,int);
-	~Proceso() {};
-	bool operator<(const Proceso &element) const;
-	void set_id(int);
-	void set_state(int);
-	void set_priority(int);
-	void set_n_instruction(int);
-	void set_lock_instruction(int);
-	void set_lock_event(int);
 
-	int get_id(void);
-	int get_state(void);
-	int get_priority(void);
-	int get_n_instruction(void);
-	int get_lock_instruction(void);
-	int get_lock_event(void);
-private:
-	int id;
-	int state; 
-	int priority;
-	int n_instruction;
-	int lock_instrution;
-	int lock_event;
+	private:
+	
+		int id;
+		int state; 
+		int priority;
+		int n_instruction;
+		int lock_instrution;
+		int lock_event;
+
+	public:
+
+		Proceso(int,int,int,int,int,int);
+		~Proceso() {}; // Destructor
+
+		bool operator<(const Proceso &element) const;
+
+		void set_id(int);
+		void set_state(int);
+		void set_priority(int);
+		void set_n_instruction(int);
+		void set_lock_instruction(int);
+		void set_lock_event(int);
+
+		int get_id(void);
+		int get_state(void);
+		int get_priority(void);
+		int get_n_instruction(void);
+		int get_lock_instruction(void);
+		int get_lock_event(void);
 };
 
+// 4444 Id del proceso, 1 estado del proceso, 1 prioridad del proceso, 333 cantidad de instrucciones
+// 333 Numero de instrucciones donde se iniciara el bloquado del proceso, 1 evento por el que espera
 Proceso::Proceso(int id, int state, int priority, int n_ins, int lock_i, int lock_e) {
 	this->id = id;
 	this->state = state;
@@ -40,9 +48,12 @@ Proceso::Proceso(int id, int state, int priority, int n_ins, int lock_i, int loc
 	this->lock_instrution = lock_i;
 	this->lock_event = lock_e;
 }
-bool Proceso::operator<(const Proceso &element) const {
+
+bool Proceso::operator < (const Proceso &element) const {
 	return this->priority < element.priority;
 }
+
+// Metodos Set
 void Proceso::set_id(int id) {
 	this->id = id;
 }
@@ -61,6 +72,8 @@ void Proceso::set_lock_instruction(int lock_instrution) {
 void Proceso::set_lock_event(int get_lock_event) {
 	this->lock_event = lock_event;
 }
+
+// Metodos Get
 int Proceso::get_id(void) {
 	return this->id;
 }
