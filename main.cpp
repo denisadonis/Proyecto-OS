@@ -5,6 +5,7 @@
 #include <exception>
 #include <queue> 
 #include <cstdlib>
+#include <cctype>
 
 #include "Proceso.h"
 
@@ -79,7 +80,7 @@ string abrirArchivo(void)
 
 // Funcion encargada de dividir las cadenas (string data, char delimitador(;))
 queue<string> split(string str, const char delimiter){
-	//cout << "prueba" << endl;
+
 	istringstream isstream(str);
   queue<string> cola;
   string word = "";
@@ -90,7 +91,7 @@ queue<string> split(string str, const char delimiter){
   	}
   }
 
-  cout << "Valor Enfrente: " << cola.front() << endl;
+  //cout << "Valor Enfrente: " << cola.front() << endl;
 	return cola;
 }
 
@@ -111,12 +112,12 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 		
 		if (validarProceso(temp)) // validacion de los procesos.
 		{
-			cout << "Luego de validar los procesos" << endl;
+
 			for (int i = 0; i < 6; i++)
 			{
 				// atoi convierte cadenas a enteros
 				code[i] = atoi(temp.front().c_str()); // .c_str() solo de esta forma se puede usar atoi en string
-				cout << "parteProceso: " << i << ". "<< code[i] << endl;
+				//cout << "parteProceso: " << i << ". "<< code[i] << endl;
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
@@ -129,13 +130,47 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 
 // esta funcion es con el objetivo de intentar validar los proceso, seria mejor tratar de validarlos antes de
 // convertirlos a enteros ya que si hay leras o espacios podrian ocacionar error
-bool validarProceso(queue<string> cola) 
-{
+bool validarProceso(queue<string> cola) {
+	int paso[6];
+	paso[0] = 4;
+	paso[1] = 1;
+	paso[2] = 1;
+	paso[3] = 3;
+	paso[4] = 3;
+	paso[5] = 1;
+
 	if(cola.size() != 6){
 		cout << "El proceso esta incompleto" << endl;
 		return false;
 	}
 
+	//cout << "tamaño: " << cola.front().size() << endl;
+	for (int i = 0; i < 6; i++){
+		if(cola.front().size() == paso[i]){
+			
+			// Es necesario volver a meter el valor al final de la cola para las proximas validaciones
+			cola.push(cola.front()); 
+			cola.pop();
+		} else {
+			cout << "tamaño incorrecto" << endl;
+			return false;
+		}
+	}
+
+	// Se necesita que recorra las 6 partes del proceso 
+	for(int i = 0; i < 6; i++){
+		// Se necesita que recorra cada parte del proceso en busca de un caracter diferente de un numero
+		for(int j = 0; j < paso[i]; j++){
+
+			if(!isdigit(cola.front()[j])){
+				
+				cout << "contiene una caracter diferente a un numero, por lo tanto es incorrecto" << endl;
+				return false;
+			}
+		}
+
+		cola.pop();
+	}
 
 	return true;
 }
