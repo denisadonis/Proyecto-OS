@@ -66,7 +66,7 @@ string abrirArchivo(void)
 
 		while (getline(infile, line))
 		{
-			data += line + "\n";
+			data += line; // Comentario: + "\n"; estaba causando problemas
 			//cout << data << endl;
 		}
 	} catch (exception & e) {
@@ -108,69 +108,92 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 
 	for (int i = 0; i < count; i++)
 	{
-		temp = split(nuevos.front(), '/'); // contiene las "6" partes de un proceso
+		// temp, contiene las "6" partes de un proceso correcto (ó podrian ser mas y ser un proceso Invalido).
+		temp = split(nuevos.front(), '/'); 
 		
 		if (validarProceso(temp)) // validacion de los procesos.
 		{
 
 			for (int i = 0; i < 6; i++)
 			{
-				// atoi convierte cadenas a enteros
+				// atoi convierte cadenas a enteros, luego del primer digito, cualquier simbolo/letra sera ignorado
 				code[i] = atoi(temp.front().c_str()); // .c_str() solo de esta forma se puede usar atoi en string
-				//cout << "parteProceso: " << i << ". "<< code[i] << endl;
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
 
 		}
-		nuevos.pop();
-		//cout << "tamaño en Funcion: " << listos.size() << endl;
+		nuevos.pop(); // Saca cada unos de los varios procesos que tiene hasta que quede vacio.
 	}
 }
 
-// esta funcion es con el objetivo de intentar validar los proceso, seria mejor tratar de validarlos antes de
-// convertirlos a enteros ya que si hay leras o espacios podrian ocacionar error
+// Esta funcion tiene el objetivo de validar los procesos.
 bool validarProceso(queue<string> cola) {
-	int paso[6];
-	paso[0] = 4;
-	paso[1] = 1;
-	paso[2] = 1;
-	paso[3] = 3;
-	paso[4] = 3;
-	paso[5] = 1;
 
+	string temporal[6];
+	// Espacios que tienen cada unas de las partes de un Proceso.
+	int paso[6];
+	paso[0] = 4; // Id del Proceso
+	paso[1] = 1; // Estado del Proceso
+	paso[2] = 1; // Prioridad
+	paso[3] = 3; // Cantidad de Instrucciones
+	paso[4] = 3; // Numeros de instruccion donde se iniciara el bloqueo del proceso
+	paso[5] = 1; // Evento por el que espera (3 = E/S 13 ciclos, 5 = Disco duro 27 ciclos)
+
+	// Comprueba si el Proceso consta de 6 partes separadas por "/".
 	if(cola.size() != 6){
-		cout << "El proceso esta incompleto" << endl;
+		cout << "El Proceso esta Incompleto." << endl;
 		return false;
 	}
 
-	//cout << "tamaño: " << cola.front().size() << endl;
+	// Comprueba si cada parte del Prooceso consta de el tamaño correcto de espacios(caracteres).
 	for (int i = 0; i < 6; i++){
 		if(cola.front().size() == paso[i]){
 			
-			// Es necesario volver a meter el valor al final de la cola para las proximas validaciones
+			// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
 			cola.push(cola.front()); 
 			cola.pop();
 		} else {
-			cout << "tamaño incorrecto" << endl;
+
+			//cout << cola.front().size();
+			cout << " El Espacio de una parte del Proceso es Incorrecto." << endl;
 			return false;
 		}
 	}
 
-	// Se necesita que recorra las 6 partes del proceso 
+	// Se necesita que recorra las 6 partes del proceso para validaciones.
 	for(int i = 0; i < 6; i++){
-		// Se necesita que recorra cada parte del proceso en busca de un caracter diferente de un numero
+		// Recorre cada Parte del proceso en busca de un caracter diferente de un numero.
 		for(int j = 0; j < paso[i]; j++){
-
+			// Hace la comparacion para ver si cada caracter es un digito (0-9).
 			if(!isdigit(cola.front()[j])){
-				
 				cout << "contiene una caracter diferente a un numero, por lo tanto es incorrecto" << endl;
 				return false;
 			}
 		}
 
-		cola.pop();
+		temporal[i] = cola.front();
+		//cout << i << ". Temporal: " << temporal[i] << endl;
+
+		// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
+		cola.push(cola.front());
+		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
 	}
 
+	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
+	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico
+		cout << "La prioridad de un proceso debe estar entre 1 y 3" << endl;
+		return false;
+	}
+
+	// Se encarga de validar que la Cantidad de Instrucciones deba de ser MAYOR a las de bloqueo.
+	if(temporal[4] > temporal[3]){
+		cout << "Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones" << endl;
+		return false;
+	}
+
+	//Falta la validacion de Ids repetidos
+
+	// Si no se encontro ningun error, la funcion retorna true.
 	return true;
 }
