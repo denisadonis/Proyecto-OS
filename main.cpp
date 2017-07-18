@@ -96,14 +96,14 @@ string abrirArchivo(void)
 queue<string> split(string str, const char delimiter){
 
 	istringstream isstream(str);
-  queue<string> cola;
-  string word = "";
+  	queue<string> cola;
+  	string word = "";
 
-  while(std::getline(isstream, word, delimiter)) { // (data, palabravacia, "/")
-  	if (word != "\n"){
+	while(std::getline(isstream, word, delimiter)) { // (data, palabravacia, "/")
+  		if (word != "\n"){
 			cola.push(word);	        
+  		}
   	}
-  }
 
   //cout << "Valor Enfrente: " << cola.front() << endl;
 	return cola;
