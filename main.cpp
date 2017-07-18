@@ -5,6 +5,7 @@
 #include <exception>
 #include <queue> 
 #include <cstdlib>
+#include <cctype>
 
 #include "Proceso.h"
 
@@ -31,13 +32,12 @@ int main()
 {
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
+	string temp = "ho1a mundo";
 
 	moverDeNuevosListos(nuevos, listos);
 	
-	cout << listos.size() << endl;
-
 	while (!listos.empty()) {
-		cout << ((Proceso)listos.top()).get_priority() << endl; //Cuidado con la forma de sacar objetos de la cola
+		cout << "id: " << ((Proceso)listos.top()).get_id() << ", p: "<< ((Proceso)listos.top()).get_priority() << endl; //Cuidado con la forma de sacar objetos de la cola
 		listos.pop();
 	}
 
@@ -93,7 +93,7 @@ void moverDeNuevosListos(queue<string> & nuevos, priority_queue<Proceso> & listo
 	for (int i = 0; i < count; ++i)
 	{
 		temp = split(nuevos.front(), '/');
-		if (validarProceso)
+		if (validarProceso(temp))
 		{
 			for (int i = 0; i < 6; ++i)
 			{
@@ -115,5 +115,53 @@ void moverDeNuevosListos(queue<string> & nuevos, priority_queue<Proceso> & listo
 // convertirlos a enteros ya que si hay leras o espacios podrian ocacionar error
 bool validarProceso(queue<string> cola) 
 {
-	return cola.size() == 6;
+	bool estado = true;
+
+	// Primer nivel de validacion 
+	if (cola.size() != 6)
+	{
+		estado = false;
+	}
+
+	// Segundo nivel de validacion
+	for (int i = 0; i < cola.size() and estado; ++i)
+	{
+		for (int x = 0; x < cola.front().size(); ++x)
+		{
+			if (!isdigit(cola.front()[x])) {
+				estado = false;
+			}
+		}
+		cola.push(cola.front());
+		cola.pop();
+	}
+
+	 for (int i = 0; !cola.empty() and estado; ++i) {
+	 	switch (i) {
+	 	case 0:
+	 		if (cola.front().size() != 4)
+	 			estado = false;
+	 		break;
+	 	case 1:
+	 	case 2:
+	 		if (cola.front().size() != 1)
+	 			estado = false;
+	 		break;
+	 	case 3:
+	 	case 4:
+	 		if (cola.front().size() != 3)
+	 			estado = false;
+	 		break;
+	 	case 5:
+	 		if (atoi(cola.front().c_str()) >= 1 & atoi(cola.front().c_str()) <= 3)
+	 			estado = false;
+	 		break;
+	 	default:
+	 		cout << "hay algun error" << endl;
+	 	}
+
+	 	cola.pop();
+	 }
+
+	return estado;
 }
