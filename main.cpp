@@ -66,7 +66,7 @@ string abrirArchivo(void)
 
 		while (getline(infile, line))
 		{
-			data += line + "\n";
+			data += line; // Comentario: + "\n"; estaba causando problemas
 			//cout << data << endl;
 		}
 	} catch (exception & e) {
@@ -116,7 +116,7 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 
 			for (int i = 0; i < 6; i++)
 			{
-				// atoi convierte cadenas a enteros
+				// atoi convierte cadenas a enteros, luego del primer digito, cualquier simbolo/letra sera ignorado
 				code[i] = atoi(temp.front().c_str()); // .c_str() solo de esta forma se puede usar atoi en string
 				temp.pop();
 			}
@@ -130,14 +130,15 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 // Esta funcion tiene el objetivo de validar los procesos.
 bool validarProceso(queue<string> cola) {
 
+	string temporal[6];
 	// Espacios que tienen cada unas de las partes de un Proceso.
 	int paso[6];
-	paso[0] = 4;
-	paso[1] = 1;
-	paso[2] = 1;
-	paso[3] = 3;
-	paso[4] = 3;
-	paso[5] = 1;
+	paso[0] = 4; // Id del Proceso
+	paso[1] = 1; // Estado del Proceso
+	paso[2] = 1; // Prioridad
+	paso[3] = 3; // Cantidad de Instrucciones
+	paso[4] = 3; // Numeros de instruccion donde se iniciara el bloqueo del proceso
+	paso[5] = 1; // Evento por el que espera (3 = E/S 13 ciclos, 5 = Disco duro 27 ciclos)
 
 	// Comprueba si el Proceso consta de 6 partes separadas por "/".
 	if(cola.size() != 6){
@@ -153,7 +154,9 @@ bool validarProceso(queue<string> cola) {
 			cola.push(cola.front()); 
 			cola.pop();
 		} else {
-			cout << "El Espacio de una parte del Proceso es Incorrecto." << endl;
+
+			//cout << cola.front().size();
+			cout << " El Espacio de una parte del Proceso es Incorrecto." << endl;
 			return false;
 		}
 	}
@@ -168,11 +171,29 @@ bool validarProceso(queue<string> cola) {
 				return false;
 			}
 		}
+
+		temporal[i] = cola.front();
+		//cout << i << ". Temporal: " << temporal[i] << endl;
+
 		// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
 		cola.push(cola.front());
 		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
 	}
 
-	// Si no se encontro ningun error, la funcion retornada true.
+	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
+	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico
+		cout << "La prioridad de un proceso debe estar entre 1 y 3" << endl;
+		return false;
+	}
+
+	// Se encarga de validar que la Cantidad de Instrucciones deba de ser MAYOR a las de bloqueo.
+	if(temporal[4] > temporal[3]){
+		cout << "Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones" << endl;
+		return false;
+	}
+
+	//Falta la validacion de Ids repetidos
+
+	// Si no se encontro ningun error, la funcion retorna true.
 	return true;
 }
