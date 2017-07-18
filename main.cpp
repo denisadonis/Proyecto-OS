@@ -41,6 +41,13 @@ int main()
 	//cout << "tamaño: " << listos.size() << endl;
 
 	cout << "--------------------" << endl;
+	cout << "Proceos que no cumplen los requisitos:" << endl;
+	while (!nuevos.empty()) {
+		cout << nuevos.front() << endl;
+		nuevos.pop();
+	}
+
+	cout << "--------------------" << endl;
 
 	while (!listos.empty()) { // Funciona mientras listos no este vacio
 		cout << "ID del proceso: " << ((Proceso)listos.top()).get_id() << endl;
@@ -122,6 +129,8 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
 
+		} else {
+			nuevos.push(nuevos.front());
 		}
 		nuevos.pop(); // Saca cada unos de los varios procesos que tiene hasta que quede vacio.
 	}
