@@ -29,7 +29,7 @@ using namespace std;
 // Prototipos
 string abrirArchivo(void); // Abre un archivo y devuelve un string con todos los elementos concatenados
 queue<string> split(string, const char); // Funcion para separar cadenas, devuelve una cola sin prioridad
-void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); //
+void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); // Funcion
 
 int main()
 {
@@ -38,12 +38,13 @@ int main()
 	cout << "Indique el Numero de Ciclos para el programa: " << endl;
 	cin >> ciclosProcesador; */
 
-	queue<string> nuevos = split(abrirArchivo(), ';');
+	// Divide los procesos cada vez que encuentra un ";" al llamar la funcion split y los almacena en "nuevos"
+	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
+	int count = nuevos.size(); // Almacena la cantidad de procesos almacenados en el archivo de texto
 
-	int count = nuevos.size();
-
-	for (int i = 0; i < count; ++i)
+	cout << "Procesos en el archivo de Texto:" << endl;
+	for (int i = 0; i < count; i++)
 	{
 		cout << nuevos.front() << endl;
 		nuevos.push(nuevos.front());
@@ -51,23 +52,19 @@ int main()
 	}
 
 	moverDeNuevosListos(nuevos, listos);
-	
-	//cout << "tamaño: " << listos.size() << endl;
 
 	cout << "--------------------" << endl;
-	cout << "Proceos que no cumplen los requisitos:" << endl;
-	while (!nuevos.empty()) {
+	cout << "Proceos que No Cumplen los Requisitos:" << endl;
+	while (!nuevos.empty()) { // Funciona mientras nuevos no este vacio
 		cout << nuevos.front() << endl;
 		nuevos.pop();
 	}
 
 	cout << "--------------------" << endl;
-
+	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
 	while (!listos.empty()) { // Funciona mientras listos no este vacio
 		cout << "ID del proceso: " << ((Proceso)listos.top()).get_id() << endl;
-		cout << "Prioridad: " << ((Proceso)listos.top()).get_priority() << endl; //Cuidado con la forma de sacar objetos de la cola
-
-		//cout << "primeros en la lista: " << listos.top() << endl;
+		cout << "Prioridad: " << ((Proceso)listos.top()).get_priority() << endl;
 
 		listos.pop();
 	}
@@ -97,18 +94,17 @@ string abrirArchivo(void)
 	}
 
 	infile.close();
-	//cout << "Data: " << data << endl;
-	return data; // Todo la informacion del archivo se mantiene aqui
+	return data; // Todo la informacion del archivo se mantiene aqui y se retorna.
 }
 
-// Funcion encargada de dividir las cadenas (string data, char delimitador(;))
+// Funcion encargada de dividir las cadenas (string data, char delimitador(Ejem:';'))
 queue<string> split(string str, const char delimiter){
 
 	istringstream isstream(str);
   	queue<string> cola;
   	string word = "";
 
-	while(std::getline(isstream, word, delimiter)) { // (data, palabravacia, "/")
+	while(std::getline(isstream, word, delimiter)) { // (data, palabra vacia, "/")
   		if (word != "\n"){
 			cola.push(word);	        
   		}
@@ -123,7 +119,7 @@ todos los procesos que cumplen los requisitos para poder ejecutarse*/
 void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos) //&nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio
 {
 	
-	bool validarProceso(queue<string> cola); // Prototipo
+	bool validarProceso(queue<string> cola); // Prototipo que solo esta funcion puede usar.
 	
 	queue<string> temp; // cola donde se almacenaran las cadenas resultantes depues de dividir los proceso
 	int count = nuevos.size(); // tamaño de la cola para poder ser usada en el ciclo 
@@ -151,13 +147,13 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 	}
 }
 
-// Esta funcion tiene el objetivo de validar los procesos.
+// Esta Funcion tiene el objetivo de validar los procesos.
 bool validarProceso(queue<string> cola) {
 
-	string temporal[6];
-	static queue<string> hist_ids; // variable etatica donde se guardara el historial de ids
-	// Espacios que tienen cada unas de las partes de un Proceso.
-	int paso[6];
+	string temporal[6]; // Guarda cada parte de un proceso
+	static queue<string> hist_ids; // Variable estatica donde se guardara el historial de ids
+	
+	int paso[6]; // Espacios que tienen cada unas de las partes de un Proceso.
 	paso[0] = 4; // Id del Proceso
 	paso[1] = 1; // Estado del Proceso
 	paso[2] = 1; // Prioridad
@@ -199,17 +195,17 @@ bool validarProceso(queue<string> cola) {
 		//cout << i << ". Temporal: " << temporal[i] << endl;
 		temporal[i] = cola.front();
 
-
 		// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
 		cola.push(cola.front());
 		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
 	}
 
+	// Se encarga de verificar que no existan 2+ Ids Repetidos
 	if (!hist_ids.empty())
 	{
 		int count = hist_ids.size();
 
-		for (int i = 0; i < count; ++i)
+		for (int i = 0; i < count; i++)
 		{
 			if (temporal[0] != hist_ids.front()) {
 				hist_ids.push(temporal[0]);
