@@ -197,7 +197,7 @@ bool validarProceso(queue<string> cola) {
 			
 			// Hace la comparacion para ver si cada caracter es un digito (0-9).
 			if(!isdigit(cola.front()[j])){ // Si No es un numero.
-				cout << "Contiene una caracter diferente a un numero, por lo tanto es incorrecto:" << endl;
+				cout << "El Proceso no debe tener caracteres diferentes de un numero:" << endl;
 				return false;
 			}
 		}
@@ -222,7 +222,7 @@ bool validarProceso(queue<string> cola) {
 	}
 
 	// Se encarga de validar si lleva un evento conocido.
-	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){
+	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){ // stoi(str) - convierte una cadena a valor numerico.
 		cout << "No es Evento conocido:" << endl;
 		return false;
 	}
