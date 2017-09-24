@@ -51,15 +51,19 @@ int main()
 		nuevos.pop();
 	}
 
+	cout << "--------------------" << endl;
+	cout << "Proceos que No Cumplen los Requisitos:" << endl;
+	
 	moverDeNuevosListos(nuevos, listos); // LLamado a la Función.
 
+	/*
 	cout << "--------------------" << endl;
 	cout << "Proceos que No Cumplen los Requisitos:" << endl;
 	while (!nuevos.empty()) { // El While funciona mientras nuevos no este vacio.
 		cout << nuevos.front() << endl;
 		nuevos.pop();
 	}
-
+	*/
 	cout << "--------------------" << endl;
 	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
@@ -69,7 +73,7 @@ int main()
 		listos.pop();
 	}
 
-	cin >> parada; // Para que el .exe no se pare de un solo.
+	//cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;
 }
@@ -142,7 +146,8 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
 		} else {
-			nuevos.push(nuevos.front());
+			cout << nuevos.front() << endl;
+			nuevos.push(nuevos.front()); // Vuelve a meter los procesos al final de la cola
 		}
 		nuevos.pop(); // Saca cada unos de los varios procesos que tiene hasta que quede vacio.
 	}
@@ -164,7 +169,7 @@ bool validarProceso(queue<string> cola) {
 
 	// Comprueba si el Proceso consta de 6 partes separadas por "/".
 	if(cola.size() != 6){
-		cout << "El Proceso esta Incompleto." << endl;
+		cout << "El Proceso esta Incompleto:" << endl;
 		return false;
 	}
 
@@ -178,7 +183,7 @@ bool validarProceso(queue<string> cola) {
 		} else {
 
 			//cout << cola.front().size();
-			cout << "El Espacio de una parte del Proceso es Incorrecto." << endl;
+			cout << "El Espacio de una parte del Proceso es Incorrecto:" << endl;
 			return false;
 		}
 	}
@@ -192,7 +197,7 @@ bool validarProceso(queue<string> cola) {
 			
 			// Hace la comparacion para ver si cada caracter es un digito (0-9).
 			if(!isdigit(cola.front()[j])){ // Si No es un numero.
-				cout << "contiene una caracter diferente a un numero, por lo tanto es incorrecto" << endl;
+				cout << "Contiene una caracter diferente a un numero, por lo tanto es incorrecto:" << endl;
 				return false;
 			}
 		}
@@ -204,16 +209,35 @@ bool validarProceso(queue<string> cola) {
 		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
 	}
 
+	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
+	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico.
+		cout << "La prioridad de un proceso debe estar entre 1 y 3:" << endl;
+		return false;
+	}
+
+	// Se encarga de validar que la Cantidad de Instrucciones deba de ser MAYOR a las de bloqueo.
+	if(temporal[4] > temporal[3]){
+		cout << "La Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones:" << endl;
+		return false;
+	}
+
+	// Se encarga de validar si lleva un evento conocido.
+	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){
+		cout << "No es Evento conocido:" << endl;
+		return false;
+	}
+
 	// Se encarga de verificar que no existan 2+ Ids Repetidos.
 	if (!hist_ids.empty())
 	{
-		int count = hist_ids.size();
+		int count = hist_ids.size(); // variable encargada del numero de IDs validos
 
 		for (int i = 0; i < count; i++)
 		{
-			if (temporal[0] != hist_ids.front()) {
+			if (temporal[0] != hist_ids.front()) { // Si el ID no es igual a los demas, se agregara a la lista
 				hist_ids.push(temporal[0]);
 			} else {
+				cout << "El ID ya fue usado anteriormente:" << endl;
 				return false;
 			}
 			hist_ids.push(hist_ids.front());
@@ -221,24 +245,6 @@ bool validarProceso(queue<string> cola) {
 		}
 	} else {
 		hist_ids.push(temporal[0]);
-	}
-
-	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
-	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico.
-		cout << "La prioridad de un proceso debe estar entre 1 y 3." << endl;
-		return false;
-	}
-
-	// Se encarga de validar que la Cantidad de Instrucciones deba de ser MAYOR a las de bloqueo.
-	if(temporal[4] > temporal[3]){
-		cout << "Instruccion de Bloqueo No puede ser mayor que la Cantidad de Instrucciones." << endl;
-		return false;
-	}
-
-	// Se encarga de validar si lleva un evento conocido.
-	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){
-		cout << "No es Evento conocido." << endl;
-		return false;
 	}
 
 	// Si no se encontro ningun error, la funcion retorna true.
