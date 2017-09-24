@@ -26,22 +26,22 @@ using namespace std;
  * necesidad de crear un objeto temporal
  */
 
-// Prototipos
-string abrirArchivo(void); // Abre un archivo y devuelve un string con todos los elementos concatenados
-queue<string> split(string, const char); // Funcion para separar cadenas, devuelve una cola sin prioridad
-void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); // Funcion
+// Prototipos de Funciones
+string abrirArchivo(void); // Funcion que Abre un archivo y devuelve un string con todos los elementos concatenados.
+queue<string> split(string, const char); // Funcion para separar cadenas, devuelve una cola sin prioridad.
+void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); // Funcion encargada de recibir los procesos.
 
 int main()
 {
-	/*int parada;
+	int parada;
 	int ciclosProcesador;
-	cout << "Indique el Numero de Ciclos para el programa: " << endl;
-	cin >> ciclosProcesador; */
+	//cout << "Indique el Numero de Ciclos para el programa: " << endl;
+	//cin >> ciclosProcesador;
 
-	// Divide los procesos cada vez que encuentra un ";" al llamar la funcion split y los almacena en "nuevos"
+	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
-	int count = nuevos.size(); // Almacena la cantidad de procesos almacenados en el archivo de texto
+	int count = nuevos.size(); // Variable que Almacena la cantidad de procesos almacenados en el archivo de texto.
 
 	cout << "Procesos en el archivo de Texto:" << endl;
 	for (int i = 0; i < count; i++)
@@ -51,30 +51,30 @@ int main()
 		nuevos.pop();
 	}
 
-	moverDeNuevosListos(nuevos, listos);
+	moverDeNuevosListos(nuevos, listos); // LLamado a la Función.
 
 	cout << "--------------------" << endl;
 	cout << "Proceos que No Cumplen los Requisitos:" << endl;
-	while (!nuevos.empty()) { // Funciona mientras nuevos no este vacio
+	while (!nuevos.empty()) { // El While funciona mientras nuevos no este vacio.
 		cout << nuevos.front() << endl;
 		nuevos.pop();
 	}
 
 	cout << "--------------------" << endl;
 	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
-	while (!listos.empty()) { // Funciona mientras listos no este vacio
+	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
 		cout << "ID del proceso: " << ((Proceso)listos.top()).get_id() << endl;
 		cout << "Prioridad: " << ((Proceso)listos.top()).get_priority() << endl;
 
 		listos.pop();
 	}
 
-	//cin >> parada; // Para que el .exe no se pare de un solo.
+	cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;
 }
 
-// Funcion encargada de abrir un archivo y guardar las lineas en una variable
+// -- Funcion encargada de abrir un archivo y guardar las lineas en una variable que luego se retorna. -- 
 string abrirArchivo(void)
 {
 	string line;
@@ -97,16 +97,16 @@ string abrirArchivo(void)
 	return data; // Todo la informacion del archivo se mantiene aqui y se retorna.
 }
 
-// Funcion encargada de dividir las cadenas (string data, char delimitador(Ejem:';'))
+// -- Funcion encargada de dividir las cadenas (string data, char delimitador(Ejem:';')). --
 queue<string> split(string str, const char delimiter){
 
 	istringstream isstream(str);
-  	queue<string> cola;
-  	string word = "";
+	queue<string> cola;
+	string word = "";
 
-	while(std::getline(isstream, word, delimiter)) { // (data, palabra vacia, "/")
-  		if (word != "\n"){
-			cola.push(word);	        
+	while(std::getline(isstream, word, delimiter)) { // (data, palabra vacia, "/").
+  		if (word != "\n"){ // Si word es diferente de salto de linea.
+				cola.push(word);	        
   		}
   	}
 
@@ -114,29 +114,30 @@ queue<string> split(string str, const char delimiter){
 	return cola;
 }
 
-/* recibe la referencia de una cola de string y devuelve una cola de prioridad con 
-todos los procesos que cumplen los requisitos para poder ejecutarse*/
-void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos) //&nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio
+/* recibe la referencia de una cola de string y devuelve una cola de prioridad con.
+todos los procesos que cumplen los requisitos para poder ejecutarse. */
+//&nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio.
+void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos) 
 {
 	
-	bool validarProceso(queue<string> cola); // Prototipo que solo esta funcion puede usar.
+	bool validarProceso(queue<string> cola); // Prototipo de Funcion que solo esta Funcion puede usar para validar los procesos.
 	
-	queue<string> temp; // cola donde se almacenaran las cadenas resultantes depues de dividir los proceso
-	int count = nuevos.size(); // tamaño de la cola para poder ser usada en el ciclo 
-	int code[6]; // donde se guardaran temporalmento los datos de un proceso para despues poder ser insertados en la cola
+	queue<string> temp; // Cola donde se almacenaran las cadenas resultantes depues de dividir los procesos.
+	int count = nuevos.size(); // Variable que tiene el Tamaño de la Cola para poder ser usada en el ciclo.
+	int code[6]; // Variable donde se guardaran temporalmente los datos de un proceso para despues poder ser insertados en la cola.
 
 	for (int i = 0; i < count; i++)
 	{
-		// temp, contiene las "6" partes de un proceso correcto (ó podrian ser mas y ser un proceso Invalido).
+		// temp, contiene las "6" partes de un proceso correcto (podrian ser mas y ser un proceso Invalido ó tambien menos).
 		temp = split(nuevos.front(), '/'); 
 		
-		if (validarProceso(temp)) // validacion de los procesos.
+		if (validarProceso(temp)) // validacion de los procesos que retorna true ó false.
 		{
 
 			for (int i = 0; i < 6; i++)
 			{
-				// atoi convierte cadenas a enteros, luego del primer digito, cualquier simbolo/letra sera ignorado
-				code[i] = stoi(temp.front()); // .c_str() solo de esta forma se puede usar atoi en string
+				// atoi convierte cadenas a enteros, luego del primer digito, cualquier simbolo/letra sera ignorado.
+				code[i] = stoi(temp.front()); 
 				temp.pop();
 			}
 			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
@@ -147,19 +148,19 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 	}
 }
 
-// Esta Funcion tiene el objetivo de validar los procesos.
+// -- Esta Funcion tiene el objetivo de validar los procesos --
 bool validarProceso(queue<string> cola) {
 
-	string temporal[6]; // Guarda cada parte de un proceso
-	static queue<string> hist_ids; // Variable estatica donde se guardara el historial de ids
+	string temporal[6]; // Guarda cada parte de un proceso.
+	static queue<string> hist_ids; // Variable estatica donde se guardara el historial de ids.
 	
 	int paso[6]; // Espacios que tienen cada unas de las partes de un Proceso.
-	paso[0] = 4; // Id del Proceso
-	paso[1] = 1; // Estado del Proceso
-	paso[2] = 1; // Prioridad
-	paso[3] = 3; // Cantidad de Instrucciones
-	paso[4] = 3; // Numeros de instruccion donde se iniciara el bloqueo del proceso
-	paso[5] = 1; // Evento por el que espera (3 = E/S 13 ciclos, 5 = Disco duro 27 ciclos)
+	paso[0] = 4; // Id del Proceso.
+	paso[1] = 1; // Estado del Proceso.
+	paso[2] = 1; // Prioridad.
+	paso[3] = 3; // Cantidad de Instrucciones.
+	paso[4] = 3; // Numeros de instruccion donde se iniciara el bloqueo del proceso.
+	paso[5] = 1; // Evento por el que espera (3 = E/S 13 ciclos, 5 = Disco duro 27 ciclos).
 
 	// Comprueba si el Proceso consta de 6 partes separadas por "/".
 	if(cola.size() != 6){
@@ -171,7 +172,7 @@ bool validarProceso(queue<string> cola) {
 	for (int i = 0; i < 6; i++){
 		if(cola.front().size() == paso[i]){
 			
-			// Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
+			// ** Es necesario volver a meter el valor al final de la cola para las proximas validaciones.
 			cola.push(cola.front()); 
 			cola.pop();
 		} else {
@@ -182,12 +183,15 @@ bool validarProceso(queue<string> cola) {
 		}
 	}
 
-	// Se necesita que recorra las 6 partes del proceso para validaciones.
+	// Comprueba si los procesos tienen caracteres invalidos (Letras o simbolos).
+	// Se necesita que recorra las 6 partes del proceso para posibles errores.
 	for(int i = 0; i < 6; i++){
-		// Recorre cada Parte del proceso en busca de un caracter diferente de un numero.
+		
+		// Recorre cada una de las Partes del proceso en busca de un caracter invalido.
 		for(int j = 0; j < paso[i]; j++){
+			
 			// Hace la comparacion para ver si cada caracter es un digito (0-9).
-			if(!isdigit(cola.front()[j])){
+			if(!isdigit(cola.front()[j])){ // Si No es un numero.
 				cout << "contiene una caracter diferente a un numero, por lo tanto es incorrecto" << endl;
 				return false;
 			}
@@ -200,7 +204,7 @@ bool validarProceso(queue<string> cola) {
 		cola.pop(); // Se saca el valor enfrente para continuar con las demas partes.
 	}
 
-	// Se encarga de verificar que no existan 2+ Ids Repetidos
+	// Se encarga de verificar que no existan 2+ Ids Repetidos.
 	if (!hist_ids.empty())
 	{
 		int count = hist_ids.size();
@@ -220,7 +224,7 @@ bool validarProceso(queue<string> cola) {
 	}
 
 	// Se encarga de validar la prioridad (El valor debe estar entre 1 y 3).
-	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico
+	if(stoi(temporal[2]) < 1 || stoi(temporal[2]) > 3){ // stoi(str) - convierte una cadena a valor numerico.
 		cout << "La prioridad de un proceso debe estar entre 1 y 3." << endl;
 		return false;
 	}
@@ -231,7 +235,7 @@ bool validarProceso(queue<string> cola) {
 		return false;
 	}
 
-	// Se encarga de validar si lleva un evento conocido
+	// Se encarga de validar si lleva un evento conocido.
 	if(!(stoi(temporal[5]) == 3 || stoi(temporal[5]) == 5)){
 		cout << "No es Evento conocido." << endl;
 		return false;
