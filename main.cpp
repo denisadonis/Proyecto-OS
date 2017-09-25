@@ -6,6 +6,7 @@
 #include <queue> 
 #include <cstdlib>
 #include <cctype>
+#include <iomanip>
 
 #include "Proceso.h"
 
@@ -67,8 +68,15 @@ int main()
 	cout << "--------------------" << endl;
 	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
-		cout << "ID del proceso: " << ((Proceso)listos.top()).get_id() << endl;
-		cout << "Prioridad: " << ((Proceso)listos.top()).get_priority() << endl;
+		cout << setfill('0') << setw(3)
+				<< ((Proceso)listos.top()).get_id() << "/"
+				<< ((Proceso)listos.top()).get_state() << "/" 
+				<< ((Proceso)listos.top()).get_priority() << "/"
+				<< setfill('0') << setw(3) 
+				<< ((Proceso)listos.top()).get_n_instruction() << "/"
+				<< setfill('0') << setw(3)
+				<< ((Proceso)listos.top()).get_lock_instruction() << "/"
+				<< ((Proceso)listos.top()).get_lock_event() << endl;
 
 		listos.pop();
 	}
