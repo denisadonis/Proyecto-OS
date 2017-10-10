@@ -36,7 +36,8 @@ int main()
 {
 	int parada;
 	int ciclosProcesador;
-	//cout << "Indique el Numero de Ciclos para el programa: " << endl;
+	cout << "Indique el Numero de Ciclos para el programa: " << endl;
+	cout << endl;
 	//cin >> ciclosProcesador;
 
 	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
@@ -81,7 +82,7 @@ int main()
 		listos.pop();
 	}
 
-	//cin >> parada; // Para que el .exe no se pare de un solo.
+	cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;
 }
