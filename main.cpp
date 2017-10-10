@@ -29,17 +29,16 @@ using namespace std;
  */
 
 // Prototipos de Funciones
-string abrirArchivo(void); // Funcion que Abre un archivo y devuelve un string con todos los elementos concatenados.
-queue<string> split(string, const char); // Funcion para separar cadenas, devuelve una cola sin prioridad.
-void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); // Funcion encargada de recibir los procesos.
+string abrirArchivo(void); // Función que Abre un archivo y devuelve un string con todos los elementos concatenados.
+queue<string> split(string, const char); // Función para separar cadenas, devuelve una cola sin prioridad.
+void moverDeNuevosListos(queue<string> &, priority_queue<Proceso> &); // Función encargada de recibir los procesos.
 
 int main()
 {
 	int parada;
 	int ciclosProcesador;
 	cout << "Indique el Numero de Ciclos para el programa: " << endl;
-	cout << endl;
-	//cin >> ciclosProcesador;
+	cin >> ciclosProcesador;
 
 	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
@@ -57,17 +56,26 @@ int main()
 	cout << "--------------------" << endl;
 	cout << "Proceos que No Cumplen los Requisitos:" << endl;
 	
-	moverDeNuevosListos(nuevos, listos); // LLamado a la Función.
+	// LLamado a la Función.
+	moverDeNuevosListos(nuevos, listos);
+
+	cout << "--------------------" << endl;
 	
 	Ejecutando ejecutado(((Proceso)listos.top()));
-	listos.pop();
+	listos.pop(); // Saca el Proceso de listos para ejecutarlo 5 veces en ejecutando
 
-	for (int i = 1; i <= 50; ++i)
+	// Ciclos del Programa (FOR principal)
+	for (int i = 1; i <= ciclosProcesador; i++)
 	{
-		ejecutado.incrementarContador();
+		
+		cout << "Ciclo: " << (i) << endl;
 
-		if (i % 5 == 0)
+		ejecutado.incrementarContador(); // El contador ira aumentando luego de cada ciclo
+
+		if (i % 5 == 0) // al llegar a los 5 ciclos, cambiara de proceso por otro
 		{
+			cout << "ID del Proceso: " << ((Proceso)listos.top()).get_id() << endl;
+			
 			listos.push(ejecutado.get_proceso());
 			
 			ejecutado.set_proceso(listos.top());
@@ -77,24 +85,16 @@ int main()
 
 	listos.push(ejecutado.get_proceso());
 
-	/*
-	cout << "--------------------" << endl;
-	cout << "Proceos que No Cumplen los Requisitos:" << endl;
-	while (!nuevos.empty()) { // El While funciona mientras nuevos no este vacio.
-		cout << nuevos.front() << endl;
-		nuevos.pop();
-	}
-	*/
 	cout << "--------------------" << endl;
 	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
-		cout << setfill('0') << setw(3)
+		cout << setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
 				<< ((Proceso)listos.top()).get_id() << "/"
 				<< ((Proceso)listos.top()).get_state() << "/" 
 				<< ((Proceso)listos.top()).get_priority() << "/"
-				<< setfill('0') << setw(3) 
+				<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
 				<< ((Proceso)listos.top()).get_n_instruction() << "/"
-				<< setfill('0') << setw(3)
+				<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
 				<< ((Proceso)listos.top()).get_lock_instruction() << "/"
 				<< ((Proceso)listos.top()).get_lock_event() << "/"
 				<< ((Proceso)listos.top()).get_contador() << endl;

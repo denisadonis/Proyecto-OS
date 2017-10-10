@@ -105,6 +105,7 @@ int Proceso::get_contador(void) {
 	return this->contador;
 }
 
+// Funciones
 void Proceso::incrementarContador()
 {
 	this->contador++;

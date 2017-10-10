@@ -6,12 +6,15 @@
 
 class Ejecutando
 {
+
 private:
+	
 	Proceso proceso;
 	int last_id;
 	int n_segmentos;
 
 public:
+	
 	Ejecutando(Proceso);
 	~Ejecutando();
 
@@ -26,17 +29,20 @@ public:
 	void incrementarContador(void);
 };
 
-
+// Constructor
 Ejecutando::Ejecutando(Proceso proceso) {
 	this->proceso = proceso;
 	this->last_id = proceso.get_id();
 	this->n_segmentos = 0;
 }
 
+// Destructor
 Ejecutando::~Ejecutando() {
 	delete &proceso;
 }
 
+
+// Metodos Set
 void Ejecutando::set_proceso(Proceso proceso) {
 	this->proceso = proceso;
 }
@@ -49,6 +55,8 @@ void Ejecutando::set_n_segmentos(int n) {
 	this->n_segmentos = n;
 }
 
+
+// Metodos Get
 Proceso Ejecutando::get_proceso(void) {
 	return this->proceso;
 }
@@ -61,6 +69,8 @@ int Ejecutando::get_last_id(void) {
 	return this->last_id;
 }
 
+
+// Funciones
 void Ejecutando::incrementarContador(void) {
 	this->proceso.incrementarContador();
 }
