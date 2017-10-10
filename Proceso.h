@@ -16,9 +16,12 @@ class Proceso
 		int n_instruction;
 		int lock_instrution;
 		int lock_event;
+		int contador;
+
 
 	public:
 
+		Proceso() {};
 		Proceso(int,int,int,int,int,int);
 		~Proceso() {}; // Destructor
 
@@ -37,6 +40,10 @@ class Proceso
 		int get_n_instruction(void);
 		int get_lock_instruction(void);
 		int get_lock_event(void);
+		int get_contador(void);
+
+		void incrementarContador();
+		void disminuirPrioridad(void);
 };
 
 // 4444 Id del proceso, 1 estado del proceso, 1 prioridad del proceso, 333 cantidad de instrucciones
@@ -48,6 +55,7 @@ Proceso::Proceso(int id, int state, int priority, int n_ins, int lock_i, int loc
 	this->n_instruction = n_ins;
 	this->lock_instrution = lock_i;
 	this->lock_event = lock_e;
+	this->contador=0;
 }
 
 bool Proceso::operator < (const Proceso &element) const {
@@ -92,6 +100,20 @@ int Proceso::get_lock_instruction(void) {
 }
 int Proceso::get_lock_event(void) {
 	return this->lock_event;
+}
+int Proceso::get_contador(void) {
+	return this->contador;
+}
+
+void Proceso::incrementarContador()
+{
+	this->contador++;
+}
+
+void Proceso::disminuirPrioridad(void)
+{
+	if (this->priority < 3)
+		this->priority++;
 }
 
 #endif

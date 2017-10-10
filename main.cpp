@@ -9,6 +9,7 @@
 #include <iomanip>
 
 #include "Proceso.h"
+#include "Ejecutando.h"
 
 using namespace std;
 
@@ -56,6 +57,24 @@ int main()
 	cout << "Proceos que No Cumplen los Requisitos:" << endl;
 	
 	moverDeNuevosListos(nuevos, listos); // LLamado a la Función.
+	
+	Ejecutando ejecutado(((Proceso)listos.top()));
+	listos.pop();
+
+	for (int i = 1; i <= 50; ++i)
+	{
+		ejecutado.incrementarContador();
+
+		if (i % 5 == 0)
+		{
+			listos.push(ejecutado.get_proceso());
+			
+			ejecutado.set_proceso(listos.top());
+			listos.pop();
+		}
+	}
+
+	listos.push(ejecutado.get_proceso());
 
 	/*
 	cout << "--------------------" << endl;
@@ -76,7 +95,8 @@ int main()
 				<< ((Proceso)listos.top()).get_n_instruction() << "/"
 				<< setfill('0') << setw(3)
 				<< ((Proceso)listos.top()).get_lock_instruction() << "/"
-				<< ((Proceso)listos.top()).get_lock_event() << endl;
+				<< ((Proceso)listos.top()).get_lock_event() << "/"
+				<< ((Proceso)listos.top()).get_contador() << endl;
 
 		listos.pop();
 	}
@@ -87,8 +107,7 @@ int main()
 }
 
 // -- Funcion encargada de abrir un archivo y guardar las lineas en una variable que luego se retorna. -- 
-string abrirArchivo(void)
-{
+string abrirArchivo(void) {
 	string line;
 	string data = "";
 	ifstream infile;
