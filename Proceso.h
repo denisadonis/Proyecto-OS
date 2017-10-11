@@ -18,7 +18,6 @@ class Proceso
 		int lock_event;
 		int contador;
 
-
 	public:
 
 		Proceso() {};

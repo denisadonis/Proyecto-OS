@@ -15,8 +15,8 @@ private:
 
 public:
 	
-	Ejecutando(Proceso);
-	~Ejecutando();
+	Ejecutando(Proceso); // Constructor
+	~Ejecutando(); // Destructor
 
 	void set_proceso(Proceso);
 	void set_last_id(int);
@@ -27,6 +27,10 @@ public:
 	int get_n_segmento(void);
 
 	void incrementarContador(void);
+	void incrementarSegmento(void);
+	bool validarSegmentos();
+	void disminuirPrioridad();
+	bool validarNumInstrucciones();
 };
 
 // Constructor
@@ -45,6 +49,11 @@ Ejecutando::~Ejecutando() {
 // Metodos Set
 void Ejecutando::set_proceso(Proceso proceso) {
 	this->proceso = proceso;
+	
+	if(proceso.get_id() != last_id){
+		this->n_segmentos = 0;
+		this->last_id = proceso.get_id();
+	}
 }
 
 void Ejecutando::set_last_id(int id) {
@@ -73,6 +82,24 @@ int Ejecutando::get_last_id(void) {
 // Funciones
 void Ejecutando::incrementarContador(void) {
 	this->proceso.incrementarContador();
+}
+
+void Ejecutando::incrementarSegmento(void) {
+	if(n_segmentos <= 3){
+		this->n_segmentos++;
+	}
+}
+
+bool Ejecutando::validarSegmentos(void) {
+	return n_segmentos == 3;
+}
+
+void Ejecutando::disminuirPrioridad(void){
+	this->proceso.disminuirPrioridad();
+}
+
+bool Ejecutando::validarNumInstrucciones(void) {
+	return this->proceso.get_contador() == this->proceso.get_n_instruction();
 }
 
 #endif

@@ -26,6 +26,27 @@ using namespace std;
  * y se sustituye por .top() que accede al elemento encima de la cola
  * .emplace() esta funcion instancia un elemento y lo inseta en la cola sin la 
  * necesidad de crear un objeto temporal
+
+top
+ accesses the top element 
+
+empty
+ checks whether the underlying container is empty 
+
+size
+ returns the number of elements 
+
+push
+ inserts element and sorts the underlying container 
+
+emplace
+constructs element in-place and sorts the underlying container 
+
+pop
+removes the top element 
+
+swap
+swaps the contents 
  */
 
 // Prototipos de Funciones
@@ -43,6 +64,8 @@ int main()
 	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
+	queue<Proceso> finalizados;
+
 	int count = nuevos.size(); // Variable que Almacena la cantidad de procesos almacenados en el archivo de texto.
 
 	cout << "Procesos en el archivo de Texto:" << endl;
@@ -61,25 +84,56 @@ int main()
 
 	cout << "--------------------" << endl;
 	
-	Ejecutando ejecutado(((Proceso)listos.top()));
-	listos.pop(); // Saca el Proceso de listos para ejecutarlo 5 veces en ejecutando
+	/*
+	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
+		cout << ID:	<< ((Proceso)listos.top()).get_id() << endl;
 
-	// Ciclos del Programa (FOR principal)
-	for (int i = 1; i <= ciclosProcesador; i++)
-	{
+		listos.pop();
+	}
+	*/
+
+	//cout << "ID : " << ((Proceso)listos.top()).get_id() << endl;
+
+	cout << "ID que se va a Ejecutar Primero : " << ((Proceso)listos.top()).get_id() << endl;
+	Ejecutando ejecutado( ((Proceso)listos.top()) );
+	listos.pop(); // Saca el Proceso de listos
+
+	// ----- Ciclos del Programa (FOR principal) -----
+	for (int i = 1; i <= ciclosProcesador; i++) {
 		
 		cout << "Ciclo: " << (i) << endl;
 
 		ejecutado.incrementarContador(); // El contador ira aumentando luego de cada ciclo
 
-		if (i % 5 == 0) // al llegar a los 5 ciclos, cambiara de proceso por otro
-		{
-			cout << "ID del Proceso: " << ((Proceso)listos.top()).get_id() << endl;
-			
+			if(ejecutado.validarNumInstrucciones()){
+				
+				finalizados.push(ejecutado.get_proceso());
+				ejecutado.set_proceso(listos.top());
+				listos.pop();
+				
+				cout << "Terminados: " << ((Proceso)finalizados.front()).get_id() << endl;
+				continue; // Evita que el programa continue con las demas instrucciones pero si que continue el for
+			}
+
+		if (i % 5 == 0) { // al llegar a los 5 ciclos, cambiara de proceso por otro
+
+			ejecutado.incrementarSegmento();
+		
+			cout << "ID del Proceso siguiente: " << ((Proceso)listos.top()).get_id() << endl;
+
+			if(ejecutado.validarSegmentos()) {
+				
+				ejecutado.disminuirPrioridad();
+			}
+
 			listos.push(ejecutado.get_proceso());
 			
 			ejecutado.set_proceso(listos.top());
+
 			listos.pop();
+
+			cout << "Ejecutando Actualmente: " << ejecutado.get_proceso().get_id() << endl;
+
 		}
 	}
 
