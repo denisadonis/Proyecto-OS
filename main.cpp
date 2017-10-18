@@ -10,6 +10,7 @@
 
 #include "Proceso.h"
 #include "Ejecutando.h"
+#include "Bloqueado.h"
 
 using namespace std;
 
@@ -64,7 +65,13 @@ int main()
 	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
+	queue<Bloqueado> bloqueados;
 	queue<Proceso> finalizados;
+
+	Bloqueado temp;
+	int tamanio;
+
+	bool estado = true;
 
 	int count = nuevos.size(); // Variable que Almacena la cantidad de procesos almacenados en el archivo de texto.
 
@@ -95,49 +102,72 @@ int main()
 	//cout << "ID : " << ((Proceso)listos.top()).get_id() << endl;
 
 	cout << "ID que se va a Ejecutar Primero : " << ((Proceso)listos.top()).get_id() << endl;
-	Ejecutando ejecutado( ((Proceso)listos.top()) );
+	Ejecutando ejecutando( ((Proceso)listos.top()) );
 	listos.pop(); // Saca el Proceso de listos
 
 	// ----- Ciclos del Programa (FOR principal) -----
 	for (int i = 1; i <= ciclosProcesador; i++) {
 		
-		cout << "Ciclo: " << (i) << endl;
 
-		ejecutado.incrementarContador(); // El contador ira aumentando luego de cada ciclo
+		ejecutando.incrementarContador(); // El contador ira aumentando luego de cada ciclo
 
-			if(ejecutado.validarNumInstrucciones()){
+		if (ejecutando.listoParaBloquear() & estado) {
+			bloqueados.emplace(ejecutando.get_proceso());
+			ejecutando.set_proceso(listos.top());
+			listos.pop();
+			cout << "fui bloqueado" << endl;
+			estado = false;
+		}
+
+		if (ejecutando.validarNumInstrucciones() & estado) {
 				
-				finalizados.push(ejecutado.get_proceso());
-				ejecutado.set_proceso(listos.top());
+				finalizados.push(ejecutando.get_proceso());
+				ejecutando.set_proceso(listos.top());
 				listos.pop();
 				
-				cout << "Terminados: " << ((Proceso)finalizados.front()).get_id() << endl;
-				continue; // Evita que el programa continue con las demas instrucciones pero si que continue el for
-			}
+				cout << "Terminados: " 
+						<< ((Proceso)finalizados.front()).get_id() << endl;
+				estado = false; // Evita que el programa continue con las demas instrucciones pero si que continue el for
+		}
 
-		if (i % 5 == 0) { // al llegar a los 5 ciclos, cambiara de proceso por otro
+		if (i % 5 == 0 & estado) { // al llegar a los 5 ciclos, cambiara de proceso por otro
 
-			ejecutado.incrementarSegmento();
+			ejecutando.incrementarSegmento();
 		
-			cout << "ID del Proceso siguiente: " << ((Proceso)listos.top()).get_id() << endl;
-
-			if(ejecutado.validarSegmentos()) {
+			if(ejecutando.validarSegmentos()) {
 				
-				ejecutado.disminuirPrioridad();
+				ejecutando.disminuirPrioridad();
 			}
 
-			listos.push(ejecutado.get_proceso());
+			listos.push(ejecutando.get_proceso());
 			
-			ejecutado.set_proceso(listos.top());
+			ejecutando.set_proceso(listos.top());
 
 			listos.pop();
-
-			cout << "Ejecutando Actualmente: " << ejecutado.get_proceso().get_id() << endl;
-
 		}
+
+		if (!bloqueados.empty()) {
+			tamanio = bloqueados.size();
+			cout << tamanio << endl;
+			for (int i = 0; i < tamanio; i++) {
+				temp = bloqueados.front();
+				bloqueados.pop();
+
+				temp.aumentarContador();
+				if (!temp.estaBloqueado()) {
+					listos.push(temp.getProceso());
+				} else {
+					bloqueados.push(temp);
+				}
+
+			}
+		} // fin if bloqueados
+
+		cout << "Ciclo: " << (i) << endl;
+		estado = true;
 	}
 
-	listos.push(ejecutado.get_proceso());
+	listos.push(ejecutando.get_proceso());
 
 	cout << "--------------------" << endl;
 	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
@@ -154,6 +184,11 @@ int main()
 				<< ((Proceso)listos.top()).get_contador() << endl;
 
 		listos.pop();
+	}
+
+	while (!bloqueados.empty()) {
+		cout << ((Proceso)bloqueados.front().getProceso()).get_id() << endl;
+		bloqueados.pop();
 	}
 
 	cin >> parada; // Para que el .exe no se pare de un solo.

@@ -31,6 +31,7 @@ public:
 	bool validarSegmentos();
 	void disminuirPrioridad();
 	bool validarNumInstrucciones();
+	bool listoParaBloquear(void);
 };
 
 // Constructor
@@ -100,6 +101,10 @@ void Ejecutando::disminuirPrioridad(void){
 
 bool Ejecutando::validarNumInstrucciones(void) {
 	return this->proceso.get_contador() == this->proceso.get_n_instruction();
+}
+
+bool Ejecutando::listoParaBloquear(void) {
+	return this->proceso.get_contador() == this->proceso.get_lock_instruction();
 }
 
 #endif
