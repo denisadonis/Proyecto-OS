@@ -2,6 +2,8 @@
 #define BLOQUEADO_H
 
 #include "Proceso.h"
+#include <iostream>
+using std::cout;
 
 class Bloqueado
 {
@@ -20,6 +22,7 @@ public:
 
 	void aumentarContador(void);
 	bool estaBloqueado(void);
+	void verProceso(void);
 };
 
 Bloqueado::Bloqueado(Proceso proceso) {
@@ -51,6 +54,11 @@ void Bloqueado::aumentarContador(void) {
 
 bool Bloqueado::estaBloqueado(void) {
 	return this->tope != this->contador;
+}
+
+void Bloqueado::verProceso(void) {
+	this->proceso.verProceso();
+	cout << ":" << this->contador << std::endl;
 }
 
 #endif

@@ -129,8 +129,8 @@ void Proceso::verProceso(void) {
 			<< this->n_instruction << "/"
 			<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
 			<< this->lock_instrution << "/"
-			<< this->lock_event << "/"
-			<< this->contador << endl;
+			<< this->lock_event << " :"
+			<< this->contador;
 }
 
 #endif

@@ -107,38 +107,6 @@ int main()
 
 		ejecutando.incrementarContador(); // El contador ira aumentando luego de cada ciclo
 
-		if (ejecutando.listoParaBloquear() & estado) {
-			bloqueados.emplace(ejecutando.get_proceso());
-			ejecutando.set_proceso(listos.top());
-			listos.pop();
-			estado = false;
-		}
-
-		if (ejecutando.validarNumInstrucciones() & estado) {
-				
-			finalizados.push(ejecutando.get_proceso());
-			ejecutando.set_proceso(listos.top());
-			listos.pop();
-			
-			estado = false; // Evita que el programa continue con las demas instrucciones pero si que continue el for
-		}
-
-		if (i % 5 == 0 & estado) { // al llegar a los 5 ciclos, cambiara de proceso por otro
-
-			ejecutando.incrementarSegmento();
-		
-			if(ejecutando.validarSegmentos()) {
-				
-				ejecutando.disminuirPrioridad();
-			}
-
-			listos.push(ejecutando.get_proceso());
-			
-			ejecutando.set_proceso(listos.top());
-
-			listos.pop();
-		}
-
 		if (!bloqueados.empty()) {
 			tamanio = bloqueados.size();
 			//cout << tamanio << endl;
@@ -156,7 +124,47 @@ int main()
 			}
 		} // fin if bloqueados
 
-		estado = true;
+		if (ejecutando.get_estado() & ejecutando.listoParaBloquear()) {
+			bloqueados.emplace(ejecutando.get_proceso());
+			if (!listos.empty()) {
+				ejecutando.set_proceso(listos.top());
+				listos.pop();
+			} else 
+				ejecutando.set_estado(false);
+		}
+
+		if (ejecutando.get_estado() & ejecutando.validarNumInstrucciones()) {
+				
+			finalizados.push(ejecutando.get_proceso());
+			if (!listos.empty()) {
+				ejecutando.set_proceso(listos.top());
+				listos.pop();
+			} else 
+				ejecutando.set_estado(false);			
+		}
+
+		if (ejecutando.get_estado() & i % 5 == 0) { // al llegar a los 5 ciclos, cambiara de proceso por otro
+
+			ejecutando.incrementarSegmento();
+		
+			if(ejecutando.validarSegmentos()) {
+				
+				ejecutando.disminuirPrioridad();
+			}
+
+			listos.push(ejecutando.get_proceso());
+			
+			if (!listos.empty()) {
+				ejecutando.set_proceso(listos.top());
+				listos.pop();
+			} else 
+				ejecutando.set_estado(false);;
+		}
+
+		if (!(ejecutando.get_estado() || listos.empty())) {
+			ejecutando.set_proceso(listos.top());
+			listos.pop();
+		}
 	}
 	//listos.push(ejecutando.get_proceso());
 
@@ -167,28 +175,33 @@ int main()
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
 		((Proceso)listos.top()).verProceso();
 		listos.pop();
+		cout << endl;
 	}
 	
 	cout << "--------------------" << endl;
 	cout << "Proceso ejecutandose:" << endl;
-	ejecutando.get_proceso().verProceso();
+	if (ejecutando.get_estado())
+		ejecutando.get_proceso().verProceso();
+	else
+		cout << "...ninguno...";
 
-	cout << "--------------------" << endl;
+	cout << endl <<"--------------------" << endl;
 	cout << "Procesos bloqueados:" << endl;
 	if (bloqueados.empty())
-		cout << "...Ninguno..." << endl;
+		cout << "...Ninguno...";
 	while (!bloqueados.empty()) {
-		((Proceso)bloqueados.front().getProceso()).verProceso();
+		bloqueados.front().verProceso();
 		bloqueados.pop();
 	}
 
-	cout << "--------------------" << endl;
+	cout << endl << "--------------------" << endl;
 	cout << "Procesos finalizados:" << endl;
 	if (finalizados.empty())
 		cout << "...Ninguno..." << endl;
 	while (!finalizados.empty()) {
 		((Proceso)finalizados.front()).verProceso();
 		finalizados.pop();
+		cout << endl;
 	}
 	
 

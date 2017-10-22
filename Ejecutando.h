@@ -12,6 +12,7 @@ private:
 	Proceso proceso;
 	int last_id;
 	int n_segmentos;
+	bool estado;
 
 public:
 	
@@ -21,10 +22,12 @@ public:
 	void set_proceso(Proceso);
 	void set_last_id(int);
 	void set_n_segmentos(int);
+	void set_estado(bool);
 
 	Proceso get_proceso(void);
 	int get_last_id(void);
 	int get_n_segmento(void);
+	bool get_estado(void);
 
 	void incrementarContador(void);
 	void incrementarSegmento(void);
@@ -39,6 +42,7 @@ Ejecutando::Ejecutando(Proceso proceso) {
 	this->proceso = proceso;
 	this->last_id = proceso.get_id();
 	this->n_segmentos = 0;
+	this->estado = true;
 }
 
 // Destructor
@@ -55,6 +59,8 @@ void Ejecutando::set_proceso(Proceso proceso) {
 		this->n_segmentos = 0;
 		this->last_id = proceso.get_id();
 	}
+
+	estado = true;
 }
 
 void Ejecutando::set_last_id(int id) {
@@ -63,6 +69,10 @@ void Ejecutando::set_last_id(int id) {
 
 void Ejecutando::set_n_segmentos(int n) {
 	this->n_segmentos = n;
+}
+
+void Ejecutando::set_estado(bool estado) {
+	this->estado = estado;
 }
 
 
@@ -79,6 +89,9 @@ int Ejecutando::get_last_id(void) {
 	return this->last_id;
 }
 
+bool Ejecutando::get_estado(void) {
+	return this->estado;
+}
 
 // Funciones
 void Ejecutando::incrementarContador(void) {
