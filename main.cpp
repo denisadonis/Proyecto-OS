@@ -87,10 +87,7 @@ int main()
 	cout << "Proceos que No Cumplen los Requisitos:" << endl;
 	
 	// LLamado a la Función.
-	moverDeNuevosListos(nuevos, listos);
-
-	cout << "--------------------" << endl;
-	
+	moverDeNuevosListos(nuevos, listos);	
 	/*
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
 		cout << ID:	<< ((Proceso)listos.top()).get_id() << endl;
@@ -101,7 +98,6 @@ int main()
 
 	//cout << "ID : " << ((Proceso)listos.top()).get_id() << endl;
 
-	cout << "ID que se va a Ejecutar Primero : " << ((Proceso)listos.top()).get_id() << endl;
 	Ejecutando ejecutando( ((Proceso)listos.top()) );
 	listos.pop(); // Saca el Proceso de listos
 
@@ -115,19 +111,16 @@ int main()
 			bloqueados.emplace(ejecutando.get_proceso());
 			ejecutando.set_proceso(listos.top());
 			listos.pop();
-			cout << "fui bloqueado" << endl;
 			estado = false;
 		}
 
 		if (ejecutando.validarNumInstrucciones() & estado) {
 				
-				finalizados.push(ejecutando.get_proceso());
-				ejecutando.set_proceso(listos.top());
-				listos.pop();
-				
-				cout << "Terminados: " 
-						<< ((Proceso)finalizados.front()).get_id() << endl;
-				estado = false; // Evita que el programa continue con las demas instrucciones pero si que continue el for
+			finalizados.push(ejecutando.get_proceso());
+			ejecutando.set_proceso(listos.top());
+			listos.pop();
+			
+			estado = false; // Evita que el programa continue con las demas instrucciones pero si que continue el for
 		}
 
 		if (i % 5 == 0 & estado) { // al llegar a los 5 ciclos, cambiara de proceso por otro
@@ -148,7 +141,7 @@ int main()
 
 		if (!bloqueados.empty()) {
 			tamanio = bloqueados.size();
-			cout << tamanio << endl;
+			//cout << tamanio << endl;
 			for (int i = 0; i < tamanio; i++) {
 				temp = bloqueados.front();
 				bloqueados.pop();
@@ -163,33 +156,41 @@ int main()
 			}
 		} // fin if bloqueados
 
-		cout << "Ciclo: " << (i) << endl;
 		estado = true;
 	}
-
-	listos.push(ejecutando.get_proceso());
+	//listos.push(ejecutando.get_proceso());
 
 	cout << "--------------------" << endl;
-	cout << "Proceos que Si Cumplen los Requisitos:" << endl;
+	cout << "Procesos listos:" << endl;
+	if (listos.empty())
+		cout << "...Ninguno..." << endl;
 	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
-		cout << setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
-				<< ((Proceso)listos.top()).get_id() << "/"
-				<< ((Proceso)listos.top()).get_state() << "/" 
-				<< ((Proceso)listos.top()).get_priority() << "/"
-				<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
-				<< ((Proceso)listos.top()).get_n_instruction() << "/"
-				<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
-				<< ((Proceso)listos.top()).get_lock_instruction() << "/"
-				<< ((Proceso)listos.top()).get_lock_event() << "/"
-				<< ((Proceso)listos.top()).get_contador() << endl;
-
+		((Proceso)listos.top()).verProceso();
 		listos.pop();
 	}
+	
+	cout << "--------------------" << endl;
+	cout << "Proceso ejecutandose:" << endl;
+	ejecutando.get_proceso().verProceso();
 
+	cout << "--------------------" << endl;
+	cout << "Procesos bloqueados:" << endl;
+	if (bloqueados.empty())
+		cout << "...Ninguno..." << endl;
 	while (!bloqueados.empty()) {
-		cout << ((Proceso)bloqueados.front().getProceso()).get_id() << endl;
+		((Proceso)bloqueados.front().getProceso()).verProceso();
 		bloqueados.pop();
 	}
+
+	cout << "--------------------" << endl;
+	cout << "Procesos finalizados:" << endl;
+	if (finalizados.empty())
+		cout << "...Ninguno..." << endl;
+	while (!finalizados.empty()) {
+		((Proceso)finalizados.front()).verProceso();
+		finalizados.pop();
+	}
+	
 
 	cin >> parada; // Para que el .exe no se pare de un solo.
 

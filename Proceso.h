@@ -2,8 +2,10 @@
 #define PROCESO_H 
 
 #include <string>
-using std::string;
 #include <iostream>
+#include <iomanip>
+
+using namespace std;
 
 class Proceso
 {
@@ -43,6 +45,8 @@ class Proceso
 
 		void incrementarContador();
 		void disminuirPrioridad(void);
+
+		void verProceso(void);
 };
 
 // 4444 Id del proceso, 1 estado del proceso, 1 prioridad del proceso, 333 cantidad de instrucciones
@@ -114,6 +118,19 @@ void Proceso::disminuirPrioridad(void)
 {
 	if (this->priority < 3)
 		this->priority++;
+}
+
+void Proceso::verProceso(void) {
+	cout << setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
+			<< this->id << "/"
+			<< this->state << "/" 
+			<< this->priority << "/"
+			<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
+			<< this->n_instruction << "/"
+			<< setfill('0') << setw(3) // Inserta el caracter dentro de setfill('') hasta el numero de veces que tiene setw().
+			<< this->lock_instrution << "/"
+			<< this->lock_event << "/"
+			<< this->contador << endl;
 }
 
 #endif
