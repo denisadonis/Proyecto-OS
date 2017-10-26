@@ -41,6 +41,7 @@ Bloqueado::Bloqueado(Proceso proceso) {
 }
 */
 Proceso Bloqueado::getProceso(void) {
+	this->proceso.set_state(1);
 	return this->proceso;
 }
 

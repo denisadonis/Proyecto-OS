@@ -24,7 +24,7 @@ public:
 	void set_n_segmentos(int);
 	void set_estado(bool);
 
-	Proceso get_proceso(void);
+	Proceso get_proceso(bool);
 	int get_last_id(void);
 	int get_n_segmento(void);
 	bool get_estado(void);
@@ -40,6 +40,7 @@ public:
 // Constructor
 Ejecutando::Ejecutando(Proceso proceso) {
 	this->proceso = proceso;
+	this->proceso.set_state(2);
 	this->last_id = proceso.get_id();
 	this->n_segmentos = 0;
 	this->estado = true;
@@ -54,6 +55,7 @@ Ejecutando::~Ejecutando() {
 // Metodos Set
 void Ejecutando::set_proceso(Proceso proceso) {
 	this->proceso = proceso;
+	this->proceso.set_state(2);
 	
 	if(proceso.get_id() != last_id){
 		this->n_segmentos = 0;
@@ -77,7 +79,15 @@ void Ejecutando::set_estado(bool estado) {
 
 
 // Metodos Get
-Proceso Ejecutando::get_proceso(void) {
+Proceso Ejecutando::get_proceso(bool temp = false) {
+	if (listoParaBloquear())
+		this->proceso.set_state(3);
+	else if (validarNumInstrucciones())
+		this->proceso.set_state(4);
+
+	if (temp)
+		this->proceso.set_state(1);
+
 	return this->proceso;
 }
 

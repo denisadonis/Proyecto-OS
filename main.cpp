@@ -59,22 +59,20 @@ int main()
 {
 	int parada;
 	int ciclosProcesador;
-	cout << "Indique el Numero de Ciclos para el programa: " << endl;
-	cin >> ciclosProcesador;
+	int tamanio;
+	int count;
 
 	// Divide los procesos cada vez que encuentra un ";" al llamar la Funcion split y los almacena en la variable "nuevos".
 	queue<string> nuevos = split(abrirArchivo(), ';'); 
 	priority_queue<Proceso> listos;
 	queue<Bloqueado> bloqueados;
 	queue<Proceso> finalizados;
-
 	Bloqueado temp;
-	int tamanio;
+	
+	cout << "Indique el Numero de Ciclos para el programa: " << endl;
+	cin >> ciclosProcesador;
 
-	bool estado = true;
-
-	int count = nuevos.size(); // Variable que Almacena la cantidad de procesos almacenados en el archivo de texto.
-
+	count = nuevos.size(); // Variable que Almacena la cantidad de procesos almacenados en el archivo de texto.
 	cout << "Procesos en el archivo de Texto:" << endl;
 	for (int i = 0; i < count; i++)
 	{
@@ -152,7 +150,7 @@ int main()
 				ejecutando.disminuirPrioridad();
 			}
 
-			listos.push(ejecutando.get_proceso());
+			listos.push(ejecutando.get_proceso(true));
 			
 			if (!listos.empty()) {
 				ejecutando.set_proceso(listos.top());
@@ -194,7 +192,7 @@ int main()
 		bloqueados.pop();
 	}
 
-	cout << endl << "--------------------" << endl;
+	cout << "--------------------" << endl;
 	cout << "Procesos finalizados:" << endl;
 	if (finalizados.empty())
 		cout << "...Ninguno..." << endl;
@@ -275,7 +273,7 @@ void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos)
 				code[i] = stoi(temp.front()); 
 				temp.pop();
 			}
-			listos.emplace(code[0], code[1], code[2], code[3], code[4], code[5]);
+			listos.emplace(code[0], 1, code[2], code[3], code[4], code[5]);
 		} else {
 			cout << nuevos.front() << endl;
 			nuevos.push(nuevos.front()); // Vuelve a meter los procesos al final de la cola
