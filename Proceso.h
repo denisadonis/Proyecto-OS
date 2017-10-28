@@ -58,7 +58,7 @@ Proceso::Proceso(int id, int state, int priority, int n_ins, int lock_i, int loc
 	this->n_instruction = n_ins;
 	this->lock_instrution = lock_i;
 	this->lock_event = lock_e;
-	this->contador=0;
+	this->contador = 0;
 }
 
 bool Proceso::operator < (const Proceso &element) const {

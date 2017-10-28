@@ -28,25 +28,19 @@ using namespace std;
  * .emplace() esta funcion instancia un elemento y lo inseta en la cola sin la 
  * necesidad de crear un objeto temporal
 
-top
+• top
  accesses the top element 
-
-empty
+• empty
  checks whether the underlying container is empty 
-
-size
+• size
  returns the number of elements 
-
-push
+• push
  inserts element and sorts the underlying container 
-
-emplace
+• emplace
 constructs element in-place and sorts the underlying container 
-
-pop
+• pop
 removes the top element 
-
-swap
+• swap
 swaps the contents 
  */
 
@@ -86,22 +80,13 @@ int main()
 	
 	// LLamado a la Función.
 	moverDeNuevosListos(nuevos, listos);	
-	/*
-	while (!listos.empty()) { // El While funciona mientras listos no este vacio.
-		cout << ID:	<< ((Proceso)listos.top()).get_id() << endl;
-
-		listos.pop();
-	}
-	*/
-
-	//cout << "ID : " << ((Proceso)listos.top()).get_id() << endl;
 
 	Ejecutando ejecutando( ((Proceso)listos.top()) );
 	listos.pop(); // Saca el Proceso de listos
 
+
 	// ----- Ciclos del Programa (FOR principal) -----
 	for (int i = 1; i <= ciclosProcesador; i++) {
-		
 
 		ejecutando.incrementarContador(); // El contador ira aumentando luego de cada ciclo
 
@@ -164,7 +149,6 @@ int main()
 			listos.pop();
 		}
 	}
-	//listos.push(ejecutando.get_proceso());
 
 	cout << "--------------------" << endl;
 	cout << "Procesos listos:" << endl;
@@ -192,7 +176,7 @@ int main()
 		bloqueados.pop();
 	}
 
-	cout << "--------------------" << endl;
+	cout << endl << "--------------------" << endl;
 	cout << "Procesos finalizados:" << endl;
 	if (finalizados.empty())
 		cout << "...Ninguno..." << endl;
@@ -249,7 +233,7 @@ queue<string> split(string str, const char delimiter){
 
 /* recibe la referencia de una cola de string y devuelve una cola de prioridad con.
 todos los procesos que cumplen los requisitos para poder ejecutarse. */
-//&nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio.
+// &nuevos llega con xxxx/x/x/xxx/xxx/x(varios procesos), &listos llega vacio.
 void moverDeNuevosListos(queue<string> &nuevos, priority_queue<Proceso> &listos) 
 {
 	

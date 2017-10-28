@@ -7,15 +7,18 @@ using std::cout;
 
 class Bloqueado
 {
+
 private:
+
 	Proceso proceso;
 	int tope;
 	int contador;
 
 public:
+
 	Bloqueado() {};
 	Bloqueado(Proceso);
-	// ~Bloqueado();
+	// ~Bloqueado(); // Destructor
 	
 	Proceso getProceso(void);
 	void setProceso(Proceso);
@@ -36,7 +39,8 @@ Bloqueado::Bloqueado(Proceso proceso) {
 	this->contador = 0;
 }
 
-/*Bloqueado::~Bloqueado() {
+/*
+Bloqueado::~Bloqueado() {
 	delete &this->proceso;
 }
 */
