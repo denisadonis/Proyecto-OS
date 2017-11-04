@@ -82,7 +82,7 @@ int main()
 	moverDeNuevosListos(nuevos, listos);	
 
 	Ejecutando ejecutando( ((Proceso)listos.top()) );
-	listos.pop(); // Saca el Proceso de listos
+	listos.pop(); // Saca el Proceso de listos.
 
 
 	// ----- Ciclos del Programa (FOR principal) -----
@@ -186,7 +186,6 @@ int main()
 		cout << endl;
 	}
 	
-
 	cin >> parada; // Para que el .exe no se pare de un solo.
 
 	return 0;

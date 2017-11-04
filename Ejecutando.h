@@ -75,6 +75,7 @@ void Ejecutando::set_n_segmentos(int n) {
 
 void Ejecutando::set_estado(bool estado) {
 	this->estado = estado;
+	this->n_segmentos = 0;
 }
 
 

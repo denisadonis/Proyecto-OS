@@ -38,7 +38,6 @@ Bloqueado::Bloqueado(Proceso proceso) {
 
 	this->contador = 0;
 }
-
 /*
 Bloqueado::~Bloqueado() {
 	delete &this->proceso;

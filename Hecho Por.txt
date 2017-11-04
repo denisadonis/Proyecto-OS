@@ -1,0 +1,8 @@
+IS412 Sistemas Operativos I
+Seccion: 1600
+Fecha: 31/Oct/2017
+Integrantes:
+20141006305 Denis Adonis Henríquez Maradiaga
+20132003072 Julio Ariel Guardado Palma
+20141011614 Hector Alfredo Bardales
+

@@ -1,0 +1,27 @@
+Proceso: 1001/0/1/030/005/5;
+Bloqueos: 
+3: 13 ciclos E/S
+5: 27 ciclos Disco Duro
+
+• 30 ciclos: hace 5, se bloquea, 
+hace los otros 25 en bloqueado
+• 31 ciclos: hace 5, se bloquea, 
+hace los otros 26 en bloqueado
+• 32 ciclos:  hace 5, se bloquea, 
+hace los otros 27 en bloqueado,
+sale de bloqueados,
+pasa a ejecutandose con los 5 ciclos que habia hecho
+• 33 ciclos: hace 5, se bloquea, 
+hace los otros 27 en bloqueado,
+sale de bloqueados,
+pasa a ejecutandose con los 5 ciclos que habia hecho
+ejecutandose ahora tiene: 6
+
+• 57 ciclos: temina la ejecucion completa del programa
+
+
+
+ 
+35 ciclos: hace 5, se bloquea,
+hace los otros 27 en bloqueo
+30 + 13 + 5
