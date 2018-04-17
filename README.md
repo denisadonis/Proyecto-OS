@@ -2,4 +2,8 @@
 
 Emulador de un modelo de procesos de cinco estados
 
-# prueba con el repositorio
+# prueba 
+[x] l1
+[x] l2
+[] l3
+
